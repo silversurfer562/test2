@@ -19,10 +19,12 @@ uses it, and by Week 8 you'll have one you can measure.
 
 ## Calibrated to your baseline
 
-`docs/baseline-week-00.md` reads your actual systems and reweights this plan.
-The short version: the memory track is largely built and needs *measuring*,
-not designing; the agent track has no evidence behind it at all. Weeks 8–9
-compress to roughly one, and those hours move to Weeks 3–7 and 11.
+`docs/baseline-week-00.md` reads your actual systems — weighting each by what
+you actually did on it — and reweights this plan. The short version: the
+memory track is largely built and needs *measuring*, not designing; your
+requirements specify infrastructure reliability a level above output
+reliability; and no system across three repos gives a model tools. Weeks 8–9
+compress to roughly one, and those hours move to Weeks 1, 3, 5, and 7.
 
 The generic week files below stay as written, so that the plan still works
 when you re-run it against a different system. The baseline document is the

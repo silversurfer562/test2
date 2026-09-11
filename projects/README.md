@@ -10,7 +10,10 @@ P1 and P3. P2 is largely built — its capstone is proving it, not building it.
 
 ## P1 — The instrumented agent (Weeks 1–7)
 
-**Take one agent you actually run.** By Week 7 it should have:
+**Take one agent you actually run.** The strongest candidate is the Coach
+orchestrator in `memdocs` — it already has deliberate, code-decided control
+flow and you wrote it, so the work is measuring and hardening rather than
+rebuilding. By Week 7 it should have:
 
 - An eval suite scoring **task outcome**, not just retrieval — with n, spread,
   and cost per successful task
@@ -24,9 +27,10 @@ P1 and P3. P2 is largely built — its capstone is proving it, not building it.
 
 **Demo:** kill it mid-run in front of someone. It comes back and finishes.
 
-**Why this one matters most for you:** your memory layer exists to serve
-agents, and four rubric dimensions covering agents have no evidence behind
-them today.
+**Why this one matters most for you:** across three repos, no system gives a
+model tools, nothing resumes after a mid-run failure, and no eval scores
+output quality. The Coach routes with hand-set confidence weights and a 0.5
+threshold that has never been measured against anything.
 
 ---
 

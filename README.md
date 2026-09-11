@@ -39,7 +39,7 @@ load, over time, with real data.
 ```
 PLAN.md                  The full 12-week program, week by week
 docs/
-  baseline-week-00.md    Your week-0 baseline, read from attune-agent-memory — start here
+  baseline-week-00.md    Your week-0 baseline, read from three repos — start here
   capability-rubric.md   Ten dimensions, four levels — score yourself at weeks 0, 6, 12
   evaluation-playbook.md The central discipline: how to measure agents and memory
   operating-rhythm.md    Weekly time split, and what to do when a week goes wrong
@@ -53,10 +53,12 @@ log/                     Your working log — the record of what you actually di
 ## Start here
 
 1. Read `docs/baseline-week-00.md`. It scores you against the rubric from
-   evidence in `attune-agent-memory`, and it **reweights the twelve weeks** —
-   you are past the generic version of Weeks 8 and 9, and have no evidence at
-   all on Weeks 4 through 7. Correct the scores where the read is wrong; it
-   sees one repo at one commit.
+   evidence in `attune-agent-memory`, `memdocs`, and `deep-study-ai` — with
+   your role in each weighted — and it **reweights the twelve weeks**. The
+   short version: you are past the generic Weeks 8 and 9, no system you own
+   gives a model tools, and nothing anywhere measures output quality. Correct
+   the scores where the read is wrong; it sees three repos at one commit each
+   and nothing unpushed.
 2. Save your corrected scores as `log/rubric-week-00.md`. You need the before
    picture and you will not be able to reconstruct it in December.
 3. Read `docs/operating-rhythm.md` and put the hours in your calendar. Hours
