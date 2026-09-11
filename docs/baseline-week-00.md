@@ -228,10 +228,10 @@ Net: Weeks 8–9 compress to about one. Those hours go to Weeks 1, 3, 5, and 7.
 
 ## The artifact this baseline argues for
 
-By Week 12, write the thing that would have caught all of this on
-`deep-study-ai` — **an AI system requirements checklist you run before design
-starts.** Not a doc about the past project; a reusable instrument. On the
-evidence here, at minimum it asks:
+The thing that would have caught all of this on `deep-study-ai` is **a
+requirements checklist you run before design starts** — not a doc about the
+past project, a reusable instrument. It's written:
+`templates/requirements-checklist.md`. On the evidence here, it asks:
 
 - What measures whether the *output* is correct, and who owns that number?
 - What is the trust boundary for content we pull in, not just data we send out?
@@ -239,9 +239,10 @@ evidence here, at minimum it asks:
 - What is the cost per successful task, and when was the price table last dated?
 - What does deletion actually delete, and how do we prove it?
 
-Five questions. Every one of them is a gap this read found, and every one is
-cheap to ask at requirements time and expensive to retrofit. That's the whole
-argument for having the checklist.
+Five questions, plus conditional sections for tools, memory, model-decided
+control flow, and tenancy. Every one is a gap this read found, and every one
+is cheap to ask at requirements time and expensive to retrofit. Run it on your
+next design; revise it in Week 12 from what the quarter taught you.
 
 ## The order to start in
 

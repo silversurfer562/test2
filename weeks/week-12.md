@@ -14,7 +14,10 @@
    fire. Record every objection.
 3. **Answer each objection** in writing: accepted and changed / accepted as a
    known limitation / rejected with reasoning.
-4. **Re-score the rubric** and write the retrospective.
+4. **Revise `templates/requirements-checklist.md`** from what the quarter
+   taught you — add the questions whose absence bit you, cut the ones that
+   never earned their 45 minutes.
+5. **Re-score the rubric** and write the retrospective.
 
 ## Study (3h)
 
@@ -29,6 +32,8 @@ a reviewer attacks the reasoning rather than the conclusion.
   review produced no substantive objections, it wasn't a review — find harder
   reviewers and run it again.
 - `log/rubric-week-12.md`, scored against the same instrument as week 0
+- A revised requirements checklist, with the diff against the week-0 version
+  visible — that diff is a compact record of what twelve weeks taught you
 - A retrospective: what the numbers changed your mind about
 
 ## Write

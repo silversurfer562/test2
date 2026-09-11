@@ -45,7 +45,7 @@ docs/
   operating-rhythm.md    Weekly time split, and what to do when a week goes wrong
   reading-list.md        Sources by week, with what to extract from each
 weeks/week-NN.md         One file per week: question, build, study, gate, trap
-templates/               ADR, eval spec, weekly review, system design brief
+templates/               Requirements checklist, ADR, eval spec, weekly review, design brief
 projects/                The three capstone builds that run through the 12 weeks
 log/                     Your working log — the record of what you actually did
 ```
