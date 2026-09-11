@@ -37,7 +37,9 @@ load, over time, with real data.
 ## Repo layout
 
 ```
-PLAN.md                  The full 12-week program, week by week
+PROGRAM.md               ← the plan you actually run: 12 weeks, each landing
+                           as a shipped upgrade to a named attune package
+PLAN.md                  The generic 12-week template PROGRAM.md derives from
 docs/
   baseline-week-00.md    Your week-0 baseline, read from seven repos — start here
   attune-hardening.md    The six-week plan for the attune family, after Week 12
@@ -64,14 +66,15 @@ log/                     Your working log — the record of what you actually di
    picture and you will not be able to reconstruct it in December.
 3. Read `docs/operating-rhythm.md` and put the hours in your calendar. Hours
    that aren't scheduled aren't budgeted.
-4. Open `weeks/week-01.md` — and read it against the baseline's Week 1 row.
-   Your version is *lift the existing harness to task level*, not *build one*.
+4. Open **`PROGRAM.md`** and start Week 1. `PLAN.md` and `weeks/` are the
+   generic template it was derived from — keep them for re-running this
+   against a different system, but don't work from them.
 
 ## How to use the gates
 
 Each week has a **gate** — a pass condition stated as something checkable.
-The gate is the point. Reading the papers without passing the gate is
-entertainment.
+In `PROGRAM.md` the gate is a merged PR with a number attached, because the
+training and the upgrade work are the same work.
 
 You will miss gates. When you do, don't roll forward and hope: the phases
 are dependency-ordered, and Weeks 8–11 are close to worthless without the

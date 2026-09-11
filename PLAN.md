@@ -17,6 +17,11 @@ model layer, and 12 puts the whole thing under review. Memory comes *after*
 agents deliberately: memory quality is only observable through a system that
 uses it, and by Week 8 you'll have one you can measure.
 
+> **This is the generic template.** The plan to actually run is
+> **`PROGRAM.md`** — twelve weeks rebuilt around the corrected baseline, each
+> one landing as a shipped upgrade to a named attune package. Keep this file
+> for re-running the method against a different system.
+
 ## Calibrated to your baseline
 
 `docs/baseline-week-00.md` reads your actual systems — weighting each by what

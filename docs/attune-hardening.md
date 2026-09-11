@@ -1,4 +1,9 @@
-# After the program: hardening the attune family
+# Hardening the attune family — evidence and rationale
+
+> **Sequencing superseded by `PROGRAM.md`.** The three gaps below are now
+> Phase 1 of the main program (Weeks 1–5) rather than six weeks after it, and
+> the propagation workstream is Week 12. This document is kept for the
+> evidence: the correction that produced it, and the greps behind each gap.
 
 **Scope:** `Smart-AI-Memory/attune-ai`, `attune-rag`, `attune-forms`,
 `attune-verify`. Six weeks, same cadence as the program, starting after
