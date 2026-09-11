@@ -2,46 +2,51 @@
 
 Drop these into `.claude/plans/` in the target repo and run `/spec`.
 
-| Plan | Slug | Repos | Status |
+| Plan | Slug | Repo | Status |
 |---|---|---|---|
-| Cost joined to quality | `cost-in-quality-gate` | `attune-rag`, `attune-ai` | **Authored, NOT verified** |
-| Temporal staleness | `temporal-staleness` | `attune-ai` | **Authored, NOT verified** |
-| Deletion, proven end to end | `provable-deletion` | `attune-rag`, `attune-ai` | Not yet authored |
+| Cost joined to quality | `cost-in-quality-gate` | `attune-rag` | Verified, 8 tasks |
+| Temporal staleness | `temporal-staleness` | `attune-ai` | Verified, 8 tasks |
+| Deletion, proven end to end | `provable-deletion` | two repos | **Being split — do not execute** |
 
-## Read this before executing
+## Verification status
 
-**Neither plan has been through the verification pass.** Three adversarial
-lenses were designed for them and none ran — the workflow was interrupted
-twice. Specifically, nobody has yet checked that:
+Each plan was authored from a fresh read of the source, then checked by three
+adversarial lenses — ground truth on every path and symbol, `read_spec()` regex
+conformance, and whether the gate can actually fail — and repaired.
 
-- every `path="..."` under `<files-to-modify>` exists, and every one under
-  `<files-to-create>` doesn't;
-- `read_spec()`'s regexes actually parse the blocks — it is not an XML parser,
-  and a stray `<` or a single-quoted attribute drops a task silently;
-- each `<check>` is runnable, and at least one is red before the change.
+| Plan | Defects found | Blocking | Repaired |
+|---|---|---|---|
+| `cost-in-quality-gate` | 39 | 7 | yes |
+| `provable-deletion` | 41 | 8 | yes |
+| `temporal-staleness` | 36 | 4 | yes |
 
-Run `/spec` in review mode and read each task before approving it, or verify
-first.
+An independent check afterwards, running the real
+`_parse_tasks_from_xml` regexes and resolving every `path=` against the
+filesystem, confirmed the cost and staleness plans parse cleanly with no
+dangling `<dep>`, no bad severity value, and no path that fails to resolve.
+Paths that appear missing in those two are spec files an earlier task in the
+same plan creates — correct sequencing.
 
-## What the research pass changed
+## The defect the lenses missed
 
-Each plan was authored from a fresh read of the real code, and the readers
-were asked to report anything the brief got wrong. They found 40
-contradictions across three workstreams. Four of them changed the shape of the
-work:
+`provable-deletion` spans `attune-rag` and `attune-ai`, and prefixed every path
+with the repo name (`attune-rag/src/attune_rag/corpus/base.py`). That resolves
+to nothing from either repo root, **and it fails silently**: the path contains
+no `..`, so `attune/spec/workspace.py::_portable_path` accepts it and the
+executor writes to the wrong location rather than raising.
 
-- **attune-rag captures no token counts at all.** `LLMProvider.generate`
-  doesn't return usage, so cost cannot be computed from the current call path.
-  That prerequisite is T4 of the cost plan, and the brief omitted it entirely.
-- **`thresholds.json` is higher-is-better only.** A cost row can't go in as the
-  machinery stands — `check_thresholds` needs a direction. That's T6.
-- **`attune-ai` has no thresholds file and no `check_thresholds` equivalent.**
-  "Wire it in like precision" was wrong; the gate has to be ported from the
-  sibling package first. That's T6 of the staleness plan.
-- **Age never reaches the model-facing envelope.** `PersonalMemory.query()`
-  doesn't carry it, which makes conflict presentation undecidable today rather
-  than merely unimplemented. That's T3, and it's a prerequisite, not a feature.
+The established pattern for cross-repo work in this family is a companion plan
+file per repo — see `attune-ai/.claude/plans/extended-cache-ttl-siblings.md`,
+which says outright *"Task B (separate repo, separate PR). Do not start in the
+attune-ai session."* The plan is being split into `provable-deletion`
+(attune-rag) and `curated-erasure` (attune-ai), with the cross-repo ordering
+expressed as prose in the dependent objective plus a checkable precondition,
+since `<dep>` cannot cross files.
 
-Trust the plans over anything written about these workstreams in
-`PROGRAM.md` or `docs/attune-hardening.md` — those were written from an
-earlier, shallower read.
+## Cross-repo constraint worth remembering
+
+`_portable_path` (`attune/spec/workspace.py:50-55`) raises
+`CommandWorkspaceError` on any path containing `..`, and
+`SpecArtifactReceipt.__post_init__` runs it on every artifact path. So neither
+a `../other-repo/` path nor a repo-name prefix works. One plan file per repo is
+the only shape that executes correctly.
