@@ -8,6 +8,15 @@ prior sessions. It is a read of three repositories on 2026-09-11:
 | `attune-agent-memory` | `f79a562` | 24 files | Yours | Direct evidence |
 | `memdocs` | `4df6947` | 189 `.py` | You wrote most of it | Direct evidence |
 | `deep-study-ai` | `8c525bc` | 305 `.py` | You set requirements and design; architecture shared with the programmer; your first major team project | **Requirements & design evidence** |
+| `Smart-AI-Memory/attune-ai` | `5a91b6a` | 2385 `.py` | Yours — the product | Direct evidence |
+| `Smart-AI-Memory/attune-rag` | `f00815d` | 139 `.py` | Yours — the product | Direct evidence |
+| `Smart-AI-Memory/attune-forms` | `4191c4e` | 115 `.py` | Yours — the product | Direct evidence |
+| `Smart-AI-Memory/attune-verify` | `58aedcb` | 57 `.py` | Yours — the product | Direct evidence |
+
+**The bottom four rows were added after an earlier version of this document
+scored you without them, and they change the answer.** See the correction
+immediately below. `docs/attune-hardening.md` carries the full comparison and
+the post-program plan.
 
 That last row is load-bearing, and it cuts both ways. I don't attribute any
 line of `deep-study-ai`'s implementation to you, and I don't score your coding
@@ -30,45 +39,61 @@ It cannot see private work in progress, anything uncommitted, or
 
 ---
 
+## The correction that came first
+
+An earlier version of this document was written from `attune-agent-memory`,
+`memdocs`, and `deep-study-ai` alone. Its headline — *nothing anywhere
+measures output quality* — **was wrong**, and reading the four attune product
+repos is what showed it. I had scored the weakest sample of your work: a
+flat-file memory corpus, a framework repo, and a first team project.
+
+What the product family actually ships:
+
+- `attune-rag` publishes precision@1, recall@3, faithfulness and abstention
+  rates **on a corpus it has never seen or been tuned on**, stratified by
+  difficulty, with a hard-paraphrase subset — and gates the bundled-corpus row
+  in CI, where `--min-precision` exits 1 on a regression.
+- `attune-ai`'s recall eval reports hit@1 / hit@3 / false-positive rate with a
+  cross-process persistence phase that proves recall survives process death,
+  against a **pre-committed go/no-go matrix** and a P@3 ≥ 80% cutover gate.
+- `attune_rag/eval/faithfulness.py` decomposes answers into atomic factual
+  claims before scoring them.
+- `attune_rag/prompts.py` wraps every retrieved passage in `<passage>`
+  sentinels and ships an explicit injection-defense clause that names the
+  breakout attempt by example.
+- `cost_tracker.py:59` refuses to mis-price history across a model change, by
+  name. `model_tiers.py` is a single canonical tier contract with the
+  duplicate mirrors deliberately retired.
+- `attune-forms` exposes a typed MCP tool surface, and corrected a released
+  profile when a **live trial** showed the escaping it documented was not the
+  escaping it had.
+- `attune-verify` is an entire package for checking numeric claims against
+  declared truth sources.
+
+Measurement should have scored **4**, not 2. Tool and interface design **4**,
+not 1. The scores below are corrected.
+
 ## The finding
 
-Reading one repo, the story was "your measurement is retrieval-level." Reading
-three, with your role in each, it's sharper:
+**Your practice is not behind. It is uneven, and the unevenness runs in one
+direction.**
 
-**Your requirements specify infrastructure reliability a full level above
-output reliability.**
+Every fix the first draft of this document recommended already exists inside
+the attune family. The patch for `deep-study-ai`'s unfenced system-message
+concatenation has been sitting in `attune_rag/prompts.py` the whole time. The
+dated-price-table discipline that `memdocs` lacks is implemented in
+`cost_tracker.py`. The CI quality gate that `deep-study-ai` never specified is
+running in `attune-rag`.
 
-The design you set for `deep-study-ai` produced a circuit breaker with
-CLOSED / OPEN / HALF_OPEN states, exponential backoff, automatic
-cross-provider failover, health status exposed for monitoring, Prometheus,
-alembic migrations, and health checks. The module header states the intent
-directly — *"Production-grade reliability for healthcare applications."* That
-requirement was set, and the build delivered it. Most people running a
-clinical app never set it.
+So the gap this baseline is actually measuring is **propagation**: solved
+problems staying inside the package that solved them. That is a different and
+much more tractable problem than the one I first wrote down, and it is why
+Week 12's artifact is a checklist rather than a curriculum.
 
-The same requirements produced **no golden set, no accuracy measurement, no
-hallucination test, and no AI output eval of any kind** — `find` for
-`*eval*`, `*golden*`, `*benchmark*` across the repo returns nothing. The
-system generates patient education material, discharge instructions, SBAR
-reports, and drug-interaction analysis for nurses.
-
-There are 20+ test files. They test contracts, integrations, caching, health,
-auth, and deployment. They are tests, not evals, and the distinction is the
-whole program. The reliability requirement was stated in a docstring and
-built. The correctness requirement was never stated, so nothing was built.
-
-**That is a requirements gap, not a delivery gap** — which is why it belongs
-in a baseline about architecture rather than in a note to the engineering
-team.
-
-On a first team project, "we never wrote the correctness requirement" is the
-single most common omission there is, and it is not the interesting part. The
-interesting part is that **the same gap repeats in code you wrote alone,
-before and after**: `memdocs` has real round-trip LLM integration tests and no
-eval of what those calls return, and `attune-agent-memory` has the most
-rigorous measurement of the three and stops at the retrieval layer. One
-project's omission is a lesson. The same omission across three independent
-systems is a habit, and habits are what a baseline is for.
+Three genuine holes survive the correction, and all three are in the product:
+deletion is unproven family-wide, cost is never joined to quality, and the
+two-layer protocol's staleness claim has no test. Those are in
+`docs/attune-hardening.md`.
 
 ## What the evidence shows you already do well
 
@@ -185,46 +210,48 @@ empty eventually will be.
 
 ## Rubric, scored from evidence
 
-Sources: **D** = direct (attune, memdocs) · **R** = requirements and design
-(deep-study-ai).
+Sources: **P** = the attune product family · **D** = other direct (attune
+corpus, memdocs) · **R** = requirements and design (deep-study-ai).
 
 | Dimension | Score | Src | Evidence |
 |---|---|---|---|
-| 1. Measurement & evaluation | **2** | D + R | Method baselines and a crowding-regression class (L3 shape) at n=12, retrieval-only, no variance. No output eval specified or built anywhere |
-| 2. Context engineering | **3** | D | Cache token accounting, thinking budget, digest vs. read-all-files comparison |
+| 1. Measurement & evaluation | **4** | P | Held-out unseen corpora, difficulty stratification, pre-committed go/no-go matrices, CI gates that exit 1, a judge that decomposes claims, a live trial that overturned a shipped claim, and a package that checks numeric claims against truth sources |
+| 2. Context engineering | **3** | P + D | Passage budgets (`DEFAULT_MAX_CONTEXT_CHARS`), four prompt variants A/B-tested for faithfulness, cache-control handling, digest vs. read-all-files token comparison |
 | 3. Control flow | **3** | D | Coach: confidence routing, thresholds, synthesis, fallback, named patterns — code-decided, deliberately. Never measured |
-| 4. Tool & interface design | **1** | D | No tool calling in 500+ files you largely wrote |
-| 5. Memory architecture | **3, near 4** | D | Four-layer separation, opposite-failure-mode rationale, typed edges, decay policy, ratified protocol |
-| 6. Reliability & failure handling | **3** | R + D | Reliability stated as a requirement and delivered: three-state circuit breaker, backoff, failover, health endpoint. Stops at the request boundary, and your own fan-out has no resumption |
-| 7. Cost & latency | **2–3** | D | Per-model cost table, token accounting, latency medians. Undated prices, no cost per successful task |
-| 8. Model selection & adaptation | **2** | D + R | Provider abstraction with primary/fallback by config. No measured selection, no adaptation, stale pins |
-| 9. Safety & data boundaries | **2–3** | R | Systematic disclaimers, clinician-review framing, FHIR behind a service boundary — consistent across a large surface, and yours. Against: no trust boundary specified for inbound external content, and no deletion test on the memory side |
-| 10. Communicating architecture | **3–4** | D | ADRs with rejected alternatives and revisit conditions; one empty template |
+| 4. Tool & interface design | **4** | P | `attune-forms`: typed MCP tools with JSON schemas mirrored across two packages, refusal at build time and collection time, fence-defusing on rendered labels, host profiles corrected by live trial |
+| 5. Memory architecture | **3, near 4** | P + D | Four-layer separation, opposite-failure-mode rationale, typed edges, decay policy, ratified protocol, cross-process persistence proven |
+| 6. Reliability & failure handling | **3** | P + R + D | Three-state circuit breaker (specified, not written by you), atomic `O_APPEND` writes, bounded probe budgets. Your own Coach fan-out still has no resumption |
+| 7. Cost & latency | **3** | P | `cost_tracker` handles price history correctly and by name; benchmarks report mean and max latency. Cost is not joined to quality anywhere |
+| 8. Model selection & adaptation | **3** | P | One canonical tier contract, env-overridable, per-call resolution, duplicate mirrors retired — and the tiers measured head-to-head (25% → 90% on hard paraphrases). No adaptation or fine-tuning |
+| 9. Safety & data boundaries | **3** | P + R | Explicit injection-defense clause with sentinel wrapping, abstention measured (92% → 8%), session redaction, consistent clinical disclaimers. Deletion unproven family-wide |
+| 10. Communicating architecture | **3–4** | D + P | ADRs with rejected alternatives and revisit conditions, numbered D-items in specs, published methodology; one empty template |
 
-**Reading the scores:** dimensions 1, 4, 5, 7, 10 rest on code you wrote —
-treat those as firm. Dimensions 6 and 9 rest substantially on requirements you
-set, which is the right evidence for an architect but has a known blind spot:
-it shows what you specified, not what you'd catch in someone else's design.
-Week 12's review is where that gets tested.
+**Reading the scores:** the four dimensions carried by the product family
+(1, 4, 8, 9) are firm — they rest on shipped, reproducible artifacts. The
+weaker scores are 3 (control flow), 6 (reliability), and 7 (cost), and each
+has a specific, small piece of unfinished work behind it rather than a missing
+capability.
 
 ## What this does to the twelve weeks
 
 | Week | Generic | Your version |
 |---|---|---|
-| 1 | Build an eval harness | **Build one for output quality on a system you own outright** — `memdocs` wizards, not the clinical app. Keep attune's A/B/C class design. Then take the method to the DSA team as a requirement |
-| 2 | Discover context is a budget | Mostly done. Spend it on cache-prefix ordering in the hydrate path; hold the 30% gate |
-| 3 | Trace and hand-label failures | **In full.** 100 real failing sessions, read by hand. Nothing in three repos substitutes for this |
-| 4 | Pipeline vs agent | You have the pipeline. **Score the router** — the 0.5 threshold and confidence weights in `coach.py` are yours, hand-set, and never measured |
-| 5 | Tool interface design | **In full, and it's the widest gap.** Build a tool surface in `memdocs`, where you own the whole stack |
+| 1 | Build an eval harness | **You have four.** Instead: join cost to quality — wire `cost_tracker` into `attune_rag.benchmark` and report cost per *successful* query. The one axis your own thesis names that has no number on it |
+| 2 | Discover context is a budget | Largely done. Spend it on cache-prefix ordering in the hydrate path; hold the 30% gate |
+| 3 | Trace and hand-label failures | **In full.** 100 real failing sessions, read by hand. Your benchmarks score queries; nothing reads whole sessions. This is still the highest-value unbuilt thing |
+| 4 | Pipeline vs agent | You have the pipeline. **Score the router** — `coach.py`'s 0.5 threshold and confidence weights are hand-set and never measured, and `memdocs` is the one place your measuring discipline didn't reach |
+| 5 | Tool interface design | **You ship a typed MCP surface.** Instead: measure its tool-error rate against an eval set the way `attune-rag` measures precision. Design is at 4; the measurement of the design isn't |
 | 6 | Multi-agent | Cut this first if you fall behind |
-| 7 | Durable agents | **Half done.** Reliability specified; idempotency, checkpointing, resumption absent from your own fan-out. Then write the inbound trust-boundary requirement — the one whose absence let finding 3 ship |
-| 8 | Memory reference architecture | **Already written.** Red-team the two-layer protocol instead of designing it again |
+| 7 | Durable agents | **The real gap.** Circuit breakers and atomic writes exist; idempotency keys, checkpointing and resumption do not. Kill a `coach.py` fan-out mid-run and make it come back |
+| 8 | Memory reference architecture | **Already written and ratified.** Red-team the two-layer protocol instead of designing it again |
 | 9 | Build the write path | Built. **Measure it**: 100 curated nodes, labelled correct / redundant / wrong, improve, re-measure |
-| 10 | Build the read path | Built. **Adversarial set + deletion test.** Theory ratified, never tested |
-| 11 | Model layer | **In full.** Start by re-dating the cost table in `providers.py` — an afternoon in your own code, and it corrects every cost decision downstream |
-| 12 | Design review | **Raise the bar, and flip the chair.** Three substantive objections survived on your own design, then run a review of someone else's. Reviewing is the half your evidence doesn't cover. Ship the requirements checklist below as the week's second artifact |
+| 10 | Build the read path | Built and persistence-tested. **Staleness and deletion are not.** The protocol's central claim has no test, and `attune-rag` has no removal path at all |
+| 11 | Model layer | Tiers are measured; adaptation is untouched. **Fine-tuning is the only genuinely new thing here** — the curation admission classifier from your `review_verdict` labels |
+| 12 | Design review | Raise the bar, and flip the chair. Three substantive objections survived on your own design, then review someone else's. Ship the requirements checklist as the week's second artifact |
 
-Net: Weeks 8–9 compress to about one. Those hours go to Weeks 1, 3, 5, and 7.
+Net: Weeks 1, 5, 8 and 9 shrink hard. Those hours go to **Weeks 3, 7 and 11**,
+which are now the only weeks teaching something the attune family doesn't
+already do.
 
 ## The artifact this baseline argues for
 
@@ -246,13 +273,15 @@ next design; revise it in Week 12 from what the quarter taught you.
 
 ## The order to start in
 
-1. **Route finding 3 to whoever owns `claude_service.py`.** An afternoon of
-   their time, and it closes a live exposure in a deployed clinical system.
-   Yours is the follow-up: write the inbound trust-boundary requirement that
-   should have existed, in Week 7.
-2. **Re-date the cost table and model pins in `providers.py`.** Your code, an
-   afternoon, and every cost comparison you make for the next eleven weeks
-   rests on it.
-3. **Then Week 1** — output eval on a `memdocs` wizard. That's the quarter's
-   real work, and it's why Week 1 stays in the plan even though you already
-   have a harness.
+1. **Port `attune_rag/prompts.py`'s passage fencing to
+   `deep-study-ai/claude_service.py:94`.** You already wrote the fix. An
+   afternoon, and it closes a live exposure in a deployed clinical system.
+2. **Re-date the cost table and model pins in `memdocs/.../providers.py`** —
+   the one place your price-history discipline didn't reach. `cost_tracker.py`
+   shows what right looks like.
+3. **Then Week 1** — join cost to quality in `attune_rag.benchmark`. Small,
+   and it completes the axis your product thesis is built on.
+
+After Week 12, `docs/attune-hardening.md` is the six-week plan for the three
+gaps that survive this correction: unproven deletion, cost detached from
+quality, and an untested staleness claim.

@@ -21,10 +21,14 @@ uses it, and by Week 8 you'll have one you can measure.
 
 `docs/baseline-week-00.md` reads your actual systems — weighting each by what
 you actually did on it — and reweights this plan. The short version: the
-memory track is largely built and needs *measuring*, not designing; your
-requirements specify infrastructure reliability a level above output
-reliability; and no system across three repos gives a model tools. Weeks 8–9
-compress to roughly one, and those hours move to Weeks 1, 3, 5, and 7.
+attune product family already holds Weeks 1, 5, 8 and 9 to a higher standard
+than this program teaches, so those weeks shrink and the hours move to
+**Weeks 3, 7 and 11** — session-level failure analysis, durable execution,
+and model adaptation, the three things the family doesn't already do.
+
+After Week 12, `docs/attune-hardening.md` is a six-week plan for the three
+gaps that survive: unproven deletion, cost detached from quality, and an
+untested staleness claim.
 
 The generic week files below stay as written, so that the plan still works
 when you re-run it against a different system. The baseline document is the
