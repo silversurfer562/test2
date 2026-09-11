@@ -40,6 +40,10 @@ several weeks have none, because you already do the thing.
 
 You sell checkable claims. Three are currently on credit.
 
+> **`PHASE-1.md` is the narrowed charter for this phase** — the entry
+> criterion, the shared definition of done, the sequencing argument, and the
+> `/spec` mechanics. Read it before starting Week 1.
+
 ## Week 1 — Cost joined to quality
 
 **Capability:** cost & latency engineering, 3 → 4.

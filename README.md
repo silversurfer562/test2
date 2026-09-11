@@ -37,8 +37,10 @@ load, over time, with real data.
 ## Repo layout
 
 ```
-PROGRAM.md               ← the plan you actually run: 12 weeks, each landing
-                           as a shipped upgrade to a named attune package
+PHASE-1.md               ← the current focus: five weeks, three claims,
+                           executed as /spec plans
+PROGRAM.md               The full 12 weeks, each landing as a shipped
+                           upgrade to a named attune package
 PLAN.md                  The generic 12-week template PROGRAM.md derives from
 docs/
   baseline-week-00.md    Your week-0 baseline, read from seven repos — start here
